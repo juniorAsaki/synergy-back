@@ -10,4 +10,6 @@ public class AddressDTO {
     private String city;
 
     private Set<ResidenceDTO> residences;
+
+    private String Slug;
 }
