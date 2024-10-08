@@ -24,6 +24,7 @@ public class Reservation  implements Serializable {
     private LocalDate startDate;
     private LocalDate endDate;
     private Double totalAmount;
+    private String slug;
 
     @OneToOne
     private Residence residence;

@@ -22,6 +22,7 @@ public class Image implements Serializable {
     private String imageUrl;
     private String description;
     private LocalDate dateUpload;
+    private String slug;
 
     @ManyToOne
     private Residence residence;

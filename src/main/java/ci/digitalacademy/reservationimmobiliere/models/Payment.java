@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
@@ -16,14 +17,16 @@ import java.time.LocalDate;
 @Table(name = "payment")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "payment")
-public abstract class Payment {
+public abstract class Payment implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Double amount;
     private String paymentMethod;
     private LocalDate date;
+
+    private String slug;
 
     @OneToOne
     private Reservation reservation;

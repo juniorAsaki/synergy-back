@@ -24,12 +24,16 @@ public class Residence implements Serializable {
     private Double price;
     private String description;
     private boolean available;
+    private String slug;
 
     @OneToMany
     private List<Review> reviews;
 
     @ManyToOne
     private Address address;
+
+    @ManyToOne
+    private Owner owner;
 
     @OneToMany
     private List<Image> images;

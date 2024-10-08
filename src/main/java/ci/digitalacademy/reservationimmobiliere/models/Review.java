@@ -22,6 +22,7 @@ public class Review implements Serializable {
     private Long id;
     private String comment;
     private LocalDate date;
+    private String slug;
 
     @ManyToOne
     private Customer customer;
