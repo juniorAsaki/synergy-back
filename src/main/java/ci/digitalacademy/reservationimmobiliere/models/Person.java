@@ -6,10 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
+
 
 import java.io.Serializable;
-import java.time.LocalDate;
+
 
 @Getter
 @Setter
@@ -34,10 +34,6 @@ public abstract class Person implements Serializable {
 
     @Column(nullable = false, unique = true)
     private String phoneNumber;
-
-    @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birthDay;
 
     private String slug;
 

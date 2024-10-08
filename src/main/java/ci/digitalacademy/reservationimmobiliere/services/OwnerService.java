@@ -23,4 +23,5 @@ public interface OwnerService {
     void delete(Long id);
 
     OwnerDTO saveOwner(OwnerDTO ownerDTO);
+
 }

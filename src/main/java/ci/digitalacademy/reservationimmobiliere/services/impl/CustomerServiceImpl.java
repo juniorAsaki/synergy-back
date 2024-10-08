@@ -5,7 +5,6 @@ import ci.digitalacademy.reservationimmobiliere.models.Customer;
 import ci.digitalacademy.reservationimmobiliere.services.CustomerService;
 import ci.digitalacademy.reservationimmobiliere.services.dto.CustomerDTO;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.CustomerMapper;
-import ci.digitalacademy.reservationimmobiliere.utils.SlugifyUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -60,9 +59,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
-        log.debug("Request to save Customer {}", customerDTO);
-        final String slug = SlugifyUtils.generate(customerDTO.getEmail());
-        customerDTO.setSlug(slug);
-        return save(customerDTO);
+        return null;
     }
 }
