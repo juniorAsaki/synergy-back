@@ -1,6 +1,5 @@
 package ci.digitalacademy.reservationimmobiliere.services.dto;
 
-import ci.digitalacademy.reservationimmobiliere.models.Reservation;
 
 import java.util.Set;
 
