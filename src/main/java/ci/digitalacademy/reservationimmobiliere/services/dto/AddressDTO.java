@@ -11,8 +11,8 @@ import java.util.Set;
 public class AddressDTO {
 
     private Long id;
+
     private String city;
-    private String slug;
 
     private Set<ResidenceDTO> residences;
 
