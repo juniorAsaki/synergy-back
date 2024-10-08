@@ -20,4 +20,5 @@ public class ImageDTO {
     private String description;
     private LocalDate dateUpload;
     private ResidenceDTO residence;
+    private String slug;
 }

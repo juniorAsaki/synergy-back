@@ -13,6 +13,7 @@ public class ReservationDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private Double totalAmount;
+    private String slug;
 
     private ResidenceDTO residence;
     private PaymentDTO payment;

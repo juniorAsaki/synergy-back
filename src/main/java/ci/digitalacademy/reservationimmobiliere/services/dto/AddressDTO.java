@@ -1,13 +1,18 @@
 package ci.digitalacademy.reservationimmobiliere.services.dto;
 
-import ci.digitalacademy.reservationimmobiliere.models.Residence;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
+@Getter
+@Setter
 public class AddressDTO {
 
     private Long id;
     private String city;
+    private String slug;
 
     private Set<ResidenceDTO> residences;
 

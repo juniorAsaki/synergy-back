@@ -6,5 +6,4 @@ import java.util.List;
 
 public class OwnerDTO extends PersonDTO{
 
-    private List<ResidenceDTO> residences;
 }

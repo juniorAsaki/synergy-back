@@ -19,4 +19,5 @@ public class PaymentDTO {
     private String paymentMethod;
     private LocalDate date;
     private ReservationDTO reservation;
+    private String slug;
 }

@@ -16,6 +16,7 @@ public class ResidenceDTO {
     private Double price;
     private String description;
     private boolean available;
+    private String slug;
 
     private List<ReviewDTO> reviews;
     private AddressDTO address;
