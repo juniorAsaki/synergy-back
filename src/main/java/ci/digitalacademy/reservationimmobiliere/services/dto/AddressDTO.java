@@ -15,4 +15,6 @@ public class AddressDTO {
     private String slug;
 
     private Set<ResidenceDTO> residences;
+
+    private String Slug;
 }
