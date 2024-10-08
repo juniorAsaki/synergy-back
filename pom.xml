@@ -86,6 +86,7 @@
             <artifactId>slugify</artifactId>
             <version>3.0.7</version>
         </dependency>
+
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
