@@ -5,6 +5,7 @@ import ci.digitalacademy.reservationimmobiliere.models.Owner;
 import ci.digitalacademy.reservationimmobiliere.services.OwnerService;
 import ci.digitalacademy.reservationimmobiliere.services.dto.OwnerDTO;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.OwnerMapper;
+import ci.digitalacademy.reservationimmobiliere.utils.SlugifyUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -74,5 +75,13 @@ public class OwnerServiceImpl implements OwnerService {
         log.debug("Request to delete Owner by id {}", id);
         ownerRepository.deleteById(id);
 
+    }
+
+    @Override
+    public OwnerDTO saveOwner(OwnerDTO ownerDTO) {
+        log.debug("Request to save Owner {}", ownerDTO);
+        final String slug = SlugifyUtils.generate(ownerDTO.getEmail());
+        ownerDTO.setSlug(slug);
+        return save(ownerDTO);
     }
 }

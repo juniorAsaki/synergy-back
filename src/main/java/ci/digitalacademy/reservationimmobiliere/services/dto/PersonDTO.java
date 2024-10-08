@@ -19,7 +19,6 @@ public class PersonDTO {
     private String phoneNumber;
     private String birthDay;
     private String slug;
-    private String telephone;
 
     private UserDTO user;
 }

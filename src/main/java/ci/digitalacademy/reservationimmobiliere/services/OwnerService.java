@@ -21,4 +21,7 @@ public interface OwnerService {
     OwnerDTO update(OwnerDTO ownerDTO, Long id);
 
     void delete(Long id);
+
+    OwnerDTO saveOwner(OwnerDTO ownerDTO);
+
 }
