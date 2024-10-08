@@ -16,6 +16,7 @@ public class ReviewDTO {
     private Long id;
     private String comment;
     private LocalDate date;
+    private String slug;
 
     private CustomerDTO customer;
     private ResidenceDTO residence;

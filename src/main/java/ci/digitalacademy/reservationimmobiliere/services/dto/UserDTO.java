@@ -15,6 +15,7 @@ public class UserDTO {
     private Long id;
     private String email;
     private String password;
+    private String slug;
 
     private RoleDTO role;
 }
