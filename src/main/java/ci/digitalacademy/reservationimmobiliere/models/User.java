@@ -21,8 +21,7 @@ public class User implements Serializable {
     private Long id;
     private String email;
     private String password;
-    private String slug;
 
-    @OneToOne
+    @ManyToOne
     private Role role;
 }
