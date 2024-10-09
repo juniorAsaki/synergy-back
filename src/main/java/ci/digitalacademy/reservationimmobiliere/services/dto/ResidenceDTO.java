@@ -5,6 +5,7 @@ import ci.digitalacademy.reservationimmobiliere.models.Image;
 import ci.digitalacademy.reservationimmobiliere.models.Review;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,13 +13,14 @@ import java.util.List;
 @Setter
 public class ResidenceDTO {
 
-    private Long id;
-    private Double price;
-    private String description;
-    private boolean available;
-    private String slug;
+    private Long id; // Identifiant de la résidence
+    private Double price; // Prix de la résidence
+    private String description; // Description de la résidence
+    private boolean available; // Disponibilité
+    private String slug; // Slug pour URL
 
-    private List<ReviewDTO> reviews;
-    private AddressDTO address;
-    private List<ImageDTO> images;
+    private List<ReviewDTO> reviews; // Avis sur la résidence
+    private AddressDTO address; // Adresse de la résidence
+    private List<ImageDTO> images; // Images de la résidence
+    private List<MultipartFile> imageFiles; // Fichiers d'images à uploader
 }
