@@ -2,6 +2,7 @@ package ci.digitalacademy.reservationimmobiliere.models;
 
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,4 +10,9 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Owner extends Person {
+
+    @OneToOne
+    private User user;
+
+
 }

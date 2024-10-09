@@ -1,8 +1,8 @@
 package ci.digitalacademy.reservationimmobiliere.web.resources;
 
 import ci.digitalacademy.reservationimmobiliere.services.OwnerService;
-import ci.digitalacademy.reservationimmobiliere.services.dto.CustomerDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.OwnerDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.RegistrationUserAndOwnerDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,9 +27,9 @@ public class OwnerResource {
 
     @PostMapping
     @ApiResponse(responseCode = "201", description= "Request to save owner")
-    private ResponseEntity<OwnerDTO> saveOwner(@RequestBody OwnerDTO ownerDTO){
-        log.debug("REST request to save owner: {}", ownerDTO);
-        return new ResponseEntity<>(ownerService.saveOwner(ownerDTO), HttpStatus.CREATED);
+    private ResponseEntity<RegistrationUserAndOwnerDTO> saveOwner(@RequestBody RegistrationUserAndOwnerDTO registrationUserAndOwnerDTO){
+        log.debug("REST request to save owner: {}", registrationUserAndOwnerDTO);
+        return new ResponseEntity<>(ownerService.saveOwnerAndUser(registrationUserAndOwnerDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
