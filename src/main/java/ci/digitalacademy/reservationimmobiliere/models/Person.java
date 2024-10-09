@@ -1,6 +1,7 @@
 package ci.digitalacademy.reservationimmobiliere.models;
 
 
+import ci.digitalacademy.reservationimmobiliere.models.enumeration.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,15 +31,11 @@ public abstract class Person implements Serializable {
     private String lastName;
 
     @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     private String slug;
-
-    @OneToOne
-    private User user;
-
 
 }

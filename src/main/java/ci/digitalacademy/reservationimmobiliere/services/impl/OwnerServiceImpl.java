@@ -1,13 +1,24 @@
 package ci.digitalacademy.reservationimmobiliere.services.impl;
 
 import ci.digitalacademy.reservationimmobiliere.Repository.OwnerRepository;
+import ci.digitalacademy.reservationimmobiliere.Repository.UserRepository;
 import ci.digitalacademy.reservationimmobiliere.models.Owner;
+import ci.digitalacademy.reservationimmobiliere.models.User;
+import ci.digitalacademy.reservationimmobiliere.security.AuthorityConstants;
 import ci.digitalacademy.reservationimmobiliere.services.OwnerService;
+import ci.digitalacademy.reservationimmobiliere.services.RoleService;
+import ci.digitalacademy.reservationimmobiliere.services.UserService;
 import ci.digitalacademy.reservationimmobiliere.services.dto.OwnerDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.RegistrationUserAndOwnerDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.RoleDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.UserDTO;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.OwnerMapper;
 import ci.digitalacademy.reservationimmobiliere.utils.SlugifyUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +31,34 @@ public class OwnerServiceImpl implements OwnerService {
 
     private final OwnerRepository ownerRepository;
     private final OwnerMapper ownerMapper;
+    private final UserRepository userRepository;
+    private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final RoleService roleService;
+
+    @Override
+    public RegistrationUserAndOwnerDTO saveOwnerAndUser(RegistrationUserAndOwnerDTO registrationUserAndOwnerDTO) {
+        log.debug("Request to save Owner {}", registrationUserAndOwnerDTO);
+        RoleDTO byRole = roleService.getByRole(AuthorityConstants.ROLE_PROPERTY);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setRole(byRole);
+        userDTO.setEmail(registrationUserAndOwnerDTO.getEmail());
+        userDTO.setPassword(bCryptPasswordEncoder.encode(registrationUserAndOwnerDTO.getPassword()));
+        UserDTO save = userService.save(userDTO);
+        OwnerDTO ownerDTO = new OwnerDTO();
+        ownerDTO.setFirstName(registrationUserAndOwnerDTO.getFirstName());
+        ownerDTO.setLastName(registrationUserAndOwnerDTO.getLastName());
+        ownerDTO.setPhoneNumber(registrationUserAndOwnerDTO.getPhoneNumber());
+        ownerDTO.setGender(String.valueOf(registrationUserAndOwnerDTO.getGender()));
+        ownerDTO.setUser(save);
+        final String slug = SlugifyUtils.generate(ownerDTO.getFirstName());
+        ownerDTO.setSlug(slug);
+        Owner ownerr = ownerMapper.toEntity(ownerDTO);
+        ownerr = ownerRepository.save(ownerr);
+        ownerMapper.fromEntity(ownerr);
+        return registrationUserAndOwnerDTO;
+    }
+
     @Override
     public OwnerDTO save(OwnerDTO ownerDTO) {
         log.debug("Request to save Owner {}", ownerDTO);
@@ -77,11 +116,5 @@ public class OwnerServiceImpl implements OwnerService {
 
     }
 
-    @Override
-    public OwnerDTO saveOwner(OwnerDTO ownerDTO) {
-        log.debug("Request to save Owner {}", ownerDTO);
-        final String slug = SlugifyUtils.generate(ownerDTO.getEmail());
-        ownerDTO.setSlug(slug);
-        return save(ownerDTO);
-    }
+
 }
