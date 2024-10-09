@@ -29,7 +29,7 @@ public class CustomerResource {
     @ApiResponse(responseCode = "201", description= "Request to save customer")
     private ResponseEntity<CustomerDTO> saveCustomer(@RequestBody CustomerDTO customerDTO){
         log.debug("REST request to save customer: {}", customerDTO);
-        return new ResponseEntity<>(customerService.saveCustomer(customerDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(customerService.save(customerDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

@@ -19,7 +19,7 @@ public class ResidenceDTO {
     private boolean available; // Disponibilité
     private String slug; // Slug pour URL
 
-    private List<ReviewDTO> reviews; // Avis sur la résidence
+
     private AddressDTO address; // Adresse de la résidence
     private List<ImageDTO> images; // Images de la résidence
     private List<MultipartFile> imageFiles; // Fichiers d'images à uploader

@@ -23,6 +23,6 @@ public class Address implements Serializable {
     private Long id;
     private String city;
 
-    @OneToMany
-    private Set<Residence> residences;
+    @OneToOne
+    private Residence residences;
 }

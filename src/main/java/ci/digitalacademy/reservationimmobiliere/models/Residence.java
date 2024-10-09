@@ -26,10 +26,10 @@ public class Residence implements Serializable {
     private boolean available;
     private String slug;
 
-    @OneToMany
+    @OneToMany(mappedBy = "residence")
     private List<Review> reviews;
 
-    @ManyToOne
+    @OneToOne
     private Address address;
 
     @ManyToOne
