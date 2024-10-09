@@ -25,9 +25,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Optional<AddressDTO> findById(Long id) {
-        return addressRepository.findById(id).map(address -> {
-            return  addressMapper.fromEntity(address);
-        });
+        return addressRepository.findById(id).map(addressMapper::fromEntity);
     }
 
     @Override
