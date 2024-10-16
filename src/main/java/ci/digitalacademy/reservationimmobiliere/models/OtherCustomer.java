@@ -10,6 +10,6 @@ import lombok.Setter;
 @Entity
 public class OtherCustomer extends Person {
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 }

@@ -16,6 +16,8 @@ public interface OtherCustomerService {
 
     Optional<OtherCustomerDTO> getBySlug(String slug);
 
+    OtherCustomerDTO getByEmail(String email);
+
     void delete(Long id);
 
     OtherCustomerDTO saveCustomer(OtherCustomerDTO otherCustomerDTO);

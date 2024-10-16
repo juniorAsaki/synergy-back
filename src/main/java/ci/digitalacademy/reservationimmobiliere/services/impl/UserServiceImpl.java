@@ -7,7 +7,12 @@ import ci.digitalacademy.reservationimmobiliere.services.dto.UserDTO;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,7 +26,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
 
     @Override
     public UserDTO save(UserDTO userDTO) {
@@ -61,7 +65,35 @@ public class UserServiceImpl implements UserService {
         log.debug("Request to get User by email : {}", email);
         return userRepository.findByEmail(email).map(user -> {
             return userMapper.fromEntity(user);
-        }).orElse(null);
+        }).orElseThrow(() -> new IllegalArgumentException());
     }
 
+    @Override
+    public UserDTO getCurrentUser() {
+        log.debug("Request to get current user");
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+
+        Authentication authentication = securityContext.getAuthentication();
+
+        String email = null;
+
+        if (authentication == null) {
+            email = null;
+        } else if (authentication.getPrincipal() instanceof UserDetails springSecurityUser) {
+            email = springSecurityUser.getUsername();
+        } else if (authentication.getPrincipal() instanceof Jwt jwt) {
+            email = jwt.getSubject();
+        } else if (authentication.getPrincipal() instanceof String s) {
+            email = s;
+        }
+        UserDTO userDTO = getByEmail(email);
+        UserDTO user = new UserDTO();
+        if (userDTO != null) {
+            user = userDTO;
+        }
+        return user;
+    }
 }
+
+
+

@@ -1,6 +1,7 @@
 package ci.digitalacademy.reservationimmobiliere.services;
 
-import ci.digitalacademy.reservationimmobiliere.services.dto.VisitorVeservationDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.RequestReservationOtherCustomerDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.VisitorReservationDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,18 +10,20 @@ import java.util.Optional;
 
 public interface VisitorReservationService {
 
-    VisitorVeservationDTO save(VisitorVeservationDTO visitorReservationDTO);
+    VisitorReservationDTO save(VisitorReservationDTO visitorReservationDTO);
 
-    Optional<VisitorVeservationDTO> getById(Long id);
+    Optional<VisitorReservationDTO> getById(Long id);
 
-    Optional<VisitorVeservationDTO> getBySlug(String slug);
+    Optional<VisitorReservationDTO> getBySlug(String slug);
 
 
-    VisitorVeservationDTO saveReservation(VisitorVeservationDTO visitorReservationDTO);
+    VisitorReservationDTO saveReservation(VisitorReservationDTO visitorReservationDTO);
 
-    List<VisitorVeservationDTO> getAll();
+    List<VisitorReservationDTO> getAll();
 
     BigDecimal calculateTotalAmount(Long residenceId, LocalDate startDate, LocalDate endDate);
 
     boolean isPropertyAvailable(Long residenceId, LocalDate startDate, LocalDate endDate);
+
+    VisitorReservationDTO saveReservationForOtherCustomer(RequestReservationOtherCustomerDTO requestReservationOtherCustomerDTO);
 }

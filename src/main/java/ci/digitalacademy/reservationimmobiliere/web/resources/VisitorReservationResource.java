@@ -2,7 +2,8 @@ package ci.digitalacademy.reservationimmobiliere.web.resources;
 
 
 import ci.digitalacademy.reservationimmobiliere.services.VisitorReservationService;
-import ci.digitalacademy.reservationimmobiliere.services.dto.VisitorVeservationDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.RequestReservationOtherCustomerDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.VisitorReservationDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +27,14 @@ public class VisitorReservationResource {
 
     @PostMapping
     @ApiResponse(responseCode = "201", description= "Request to save Reservation")
-    private ResponseEntity<VisitorVeservationDTO> saveReservation(@RequestBody VisitorVeservationDTO visitorReservationDTO){
-        log.debug("REST request to save reservation: {}", visitorReservationDTO);
-        return new ResponseEntity<>(visitorReservationService.saveReservation(visitorReservationDTO), HttpStatus.CREATED);
+    private ResponseEntity<VisitorReservationDTO> saveReservationForOtherCustomer(@RequestBody RequestReservationOtherCustomerDTO requestReservationOtherCustomerDTO){
+        log.debug("REST request to save reservation: {}", requestReservationOtherCustomerDTO);
+        return new ResponseEntity<>(visitorReservationService.saveReservationForOtherCustomer(requestReservationOtherCustomerDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "get reservation by id", description = "this endpoint allow to get reservation by id")
-    public Optional<VisitorVeservationDTO> getReservationById(@PathVariable Long id){
+    public Optional<VisitorReservationDTO> getReservationById(@PathVariable Long id){
         log.debug(" REST Request to get one {}", id);
         return visitorReservationService.getById(id);
 
@@ -41,7 +42,7 @@ public class VisitorReservationResource {
 
     @GetMapping
     @Operation(summary = "get all reservations", description = "this endpoint allow to get all reservation")
-    public List<VisitorVeservationDTO> getAllReservation(){
+    public List<VisitorReservationDTO> getAllReservation(){
         log.debug("REST Request to all reservations ");
         return visitorReservationService.getAll();
     }

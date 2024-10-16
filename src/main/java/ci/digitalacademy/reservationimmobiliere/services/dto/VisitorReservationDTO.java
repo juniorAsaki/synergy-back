@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class VisitorVeservationDTO extends ReservationDTO{
+public class VisitorReservationDTO extends ReservationDTO{
 
     private OtherCustomerDTO otherCustomer;
 }

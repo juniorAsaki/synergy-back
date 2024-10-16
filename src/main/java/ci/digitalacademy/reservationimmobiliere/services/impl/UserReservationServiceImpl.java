@@ -7,8 +7,10 @@ import ci.digitalacademy.reservationimmobiliere.models.UserReservation;
 import ci.digitalacademy.reservationimmobiliere.services.CustomerService;
 import ci.digitalacademy.reservationimmobiliere.services.ResidenceService;
 import ci.digitalacademy.reservationimmobiliere.services.UserReservationService;
+import ci.digitalacademy.reservationimmobiliere.services.UserService;
 import ci.digitalacademy.reservationimmobiliere.services.dto.CustomerDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.ResidenceDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.UserDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.User_reservationDTO;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.UserReservationMapper;
 import ci.digitalacademy.reservationimmobiliere.utils.SlugifyUtils;
@@ -32,10 +34,12 @@ public class UserReservationServiceImpl implements UserReservationService {
     private final UserReservationMapper userReservationMapper;
     private final CustomerService customerService;
     private final ResidenceService residenceService;
+    private final UserService userService;
     @Override
     public User_reservationDTO save(User_reservationDTO userReservationDTO) {
         log.debug("Request to save Reservation : {}", userReservationDTO);
-        Optional<CustomerDTO> customerDTO = customerService.getById(userReservationDTO.getCustomer().getIdPerson());
+        UserDTO user = userService.getCurrentUser();
+        Optional<CustomerDTO> customerDTO = customerService.getById(user.getId());
         Optional<ResidenceDTO> residenceDTO = residenceService.getResidenceById(userReservationDTO.getResidence().getId());
         if (customerDTO.isPresent() && residenceDTO.isPresent()) {
             userReservationDTO.setCustomer(customerDTO.get());
@@ -72,7 +76,7 @@ public class UserReservationServiceImpl implements UserReservationService {
     @Override
     public User_reservationDTO saveReservation(User_reservationDTO userReservationDTO) {
         log.debug("Request to save Reservation : {}", userReservationDTO);
-        final String slug = SlugifyUtils.generate(userReservationDTO.getCustomer().getLastName());
+        final String slug = SlugifyUtils.generate(userReservationDTO.getResidence().getName());
         userReservationDTO.setSlug(slug);
         return save(userReservationDTO);
     }
@@ -106,7 +110,6 @@ public class UserReservationServiceImpl implements UserReservationService {
 
     public boolean isPropertyAvailable(Long residenceId, LocalDate startDate, LocalDate endDate) {
         List<User_reservationDTO> existingReservations = userReservationRepository.findByResidenceId(residenceId);
-
         for (User_reservationDTO reservation : existingReservations) {
             if (dateRangesOverlap(startDate, endDate, reservation.getStartDate(), reservation.getEndDate())) {
                 return false;

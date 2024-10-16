@@ -7,9 +7,11 @@ import ci.digitalacademy.reservationimmobiliere.models.Residence;
 import ci.digitalacademy.reservationimmobiliere.services.AddressService;
 import ci.digitalacademy.reservationimmobiliere.services.OwnerService;
 import ci.digitalacademy.reservationimmobiliere.services.ResidenceService;
+import ci.digitalacademy.reservationimmobiliere.services.UserService;
 import ci.digitalacademy.reservationimmobiliere.services.dto.OwnerDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.ResidenceDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.AddressDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.UserDTO;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.ResidenceMapper;
 import ci.digitalacademy.reservationimmobiliere.utils.SlugifyUtils;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class ResidenceServiceImpl implements ResidenceService {
     private final ResidenceRepository residenceRepository;
     private final ResidenceMapper residenceMapper;
     private final OwnerService ownerService;
+    private final UserService userService;
 
 
     public ResidenceDTO save(ResidenceDTO residenceDTO)  {
@@ -77,7 +80,8 @@ public class ResidenceServiceImpl implements ResidenceService {
     @Override
     public ResidenceDTO saveResidence(ResidenceDTO residenceDTO) {
         log.debug("Request to save residence : {}", residenceDTO);
-        Optional<OwnerDTO> ownerDTO = ownerService.getById(residenceDTO.getOwner().getIdPerson());
+        UserDTO user = userService.getCurrentUser();
+        Optional<OwnerDTO> ownerDTO = ownerService.getById(user.getId());
         if (ownerDTO.isPresent()) {
             residenceDTO.setOwner(ownerDTO.get());
         }

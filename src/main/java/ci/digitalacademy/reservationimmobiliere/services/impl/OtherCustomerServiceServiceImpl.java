@@ -53,6 +53,14 @@ public class OtherCustomerServiceServiceImpl implements OtherCustomerService {
     }
 
     @Override
+    public OtherCustomerDTO getByEmail(String email) {
+        log.debug("Request to get Customer by email {}", email);
+        return otherCustomerRepository.findByEmail(email).map(otherCustomer -> {
+            return otherCustomerMapper.fromEntity(otherCustomer);
+        }).orElse(null);
+    }
+
+    @Override
     public void delete(Long id) {
         log.debug("Request to delete Customer by id {}", id);
         otherCustomerRepository.deleteById(id);
@@ -65,4 +73,6 @@ public class OtherCustomerServiceServiceImpl implements OtherCustomerService {
         otherCustomerDTO.setSlug(slug);
         return save(otherCustomerDTO);
     }
+
+
 }
