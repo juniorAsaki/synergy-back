@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -21,20 +22,32 @@ public class Residence implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double price;
+    private BigDecimal price;
     private String description;
+    private String name;
+    private Integer NumberOfRooms;
+    private Integer NumberOfShowers;
+    private Integer NumberOfDiningRoom;
+    private Integer NumberOfTerrace;
+    private Integer NumberOfLounges;
+    private boolean wifi;
+    private boolean parking;
+    private boolean catering;
+    private boolean cleaning;
     private boolean available;
+
+    @Column(unique = true)
     private String slug;
 
-    @OneToMany(mappedBy = "residence")
+    @OneToMany(mappedBy = "residence", fetch = FetchType.EAGER)
     private List<Review> reviews;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Address address;
 
     @ManyToOne
     private Owner owner;
 
-    @OneToMany
-    private List<Image> images;
+    @OneToMany(mappedBy = "residence",fetch = FetchType.EAGER )
+    private List<PictureResidence> PictureResidences;
 }

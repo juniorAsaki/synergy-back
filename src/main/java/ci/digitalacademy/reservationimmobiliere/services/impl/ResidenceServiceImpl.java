@@ -2,150 +2,94 @@ package ci.digitalacademy.reservationimmobiliere.services.impl;
 
 
 
-import ci.digitalacademy.reservationimmobiliere.Repository.AddressRepository;
 import ci.digitalacademy.reservationimmobiliere.Repository.ResidenceRepository;
-import ci.digitalacademy.reservationimmobiliere.models.Address;
-import ci.digitalacademy.reservationimmobiliere.models.Image;
 import ci.digitalacademy.reservationimmobiliere.models.Residence;
 import ci.digitalacademy.reservationimmobiliere.services.AddressService;
-import ci.digitalacademy.reservationimmobiliere.services.FileStorageService;
+import ci.digitalacademy.reservationimmobiliere.services.OwnerService;
 import ci.digitalacademy.reservationimmobiliere.services.ResidenceService;
-import ci.digitalacademy.reservationimmobiliere.services.ReviewService;
+import ci.digitalacademy.reservationimmobiliere.services.dto.OwnerDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.ResidenceDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.AddressDTO;
-import ci.digitalacademy.reservationimmobiliere.services.dto.ReviewDTO;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.ResidenceMapper;
 import ci.digitalacademy.reservationimmobiliere.utils.SlugifyUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ResidenceServiceImpl implements ResidenceService {
 
     private final ResidenceRepository residenceRepository;
-    private final FileStorageService fileStorageService;
-    private final ResidenceMapper residenceMapper; // Mapper pour les résidences
-    private final AddressService addressService;
-    private final AddressRepository addressRepository;
+    private final ResidenceMapper residenceMapper;
+    private final OwnerService ownerService;
 
 
-    @Override
-    public Optional<ResidenceDTO> getById(Long id) {
-
-        return residenceRepository.findById(id).map(residenceMapper::fromEntity);
-    }
-
-    public ResidenceDTO createResidence(ResidenceDTO residenceDTO) throws IOException {
-        // Gestion de l'adresse
-        if (residenceDTO.getAddress() != null && residenceDTO.getAddress().getId() != null) {
-            Optional<AddressDTO> addressOpt = addressService.findById(residenceDTO.getAddress().getId());
-
-            if (addressOpt.isPresent()) {
-                residenceDTO.setAddress(addressOpt.get());  // Réutiliser l'adresse existante
-            } else {
-                throw new RuntimeException("Address not found");
-            }
-        } else if (residenceDTO.getAddress() != null) {
-            // Si l'adresse n'a pas d'ID (donc nouvelle), il faut la sauvegarder
-            Address address = new Address();
-            address.setCity(residenceDTO.getAddress().getCity());
-            // Ajouter d'autres champs si nécessaire...
-            Address savedAddress = addressRepository.save(address);  // Sauvegarder l'adresse
-            residenceDTO.getAddress().setId(savedAddress.getId());  // Mettre à jour le DTO
-        } else {
-            throw new RuntimeException("Address is null or does not have an ID");
-        }
-
-        // Mapper le DTO Residence vers l'entité Residence
+    public ResidenceDTO save(ResidenceDTO residenceDTO)  {
+        log.debug("Request to save Residence : {}", residenceDTO);
         Residence residence = residenceMapper.toEntity(residenceDTO);
-
-        // Gestion de l'upload des images
-        List<Image> uploadedImages = new ArrayList<>();
-        if (residenceDTO.getImageFiles() != null && !residenceDTO.getImageFiles().isEmpty()) {
-            for (MultipartFile file : residenceDTO.getImageFiles()) {
-                String imageUrl = fileStorageService.upload(file);  // Uploader l'image
-                Image image = new Image();
-                image.setImageUrl(imageUrl);  // Stocker l'URL de l'image
-                uploadedImages.add(image);  // Ajouter l'image à la liste
-            }
-        }
-        residence.setImages(uploadedImages);  // Associer les images à la résidence
-
-        // Générer le slug
-        residence.setSlug(SlugifyUtils.generate(residenceDTO.getDescription()));
-
-        // Sauvegarder la résidence dans la base de données
-        Residence savedResidence = residenceRepository.save(residence);
-
-        // Retourner le DTO de la résidence sauvegardée
-        return residenceMapper.fromEntity(savedResidence);
+        residence = residenceRepository.save(residence);
+        return residenceMapper.fromEntity(residence);
     }
 
 
     public List<ResidenceDTO> getAllResidences() {
-        List<Residence> residences = residenceRepository.findAll();
-        return residences.stream()
-                .map(residenceMapper::fromEntity)
-                .collect(Collectors.toList());
+        log.debug("Request to get all residences");
+        return residenceRepository.findAll().stream().map(residence -> {
+            return residenceMapper.fromEntity(residence);
+        }).toList();
     }
 
-    public ResidenceDTO getResidenceById(Long id) {
-        Residence residence = residenceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Residence not found"));
+    public Optional <ResidenceDTO> getResidenceById(Long id) {
+        log.debug("Request to get residence by id: {}", id);
+        return residenceRepository.findById(id).map(residence ->{
         return residenceMapper.fromEntity(residence);
+        });
     }
 
-    public ResidenceDTO updateResidence(Long id, ResidenceDTO residenceDTO) throws IOException {
-        Residence residence = residenceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Residence not found"));
+    public Optional <ResidenceDTO> getResidenceBySlug(String slug) {
+        log.debug("Request to get residence by slug: {}", slug);
+        return residenceRepository.findBySlug(slug).map(residence -> {
+            return residenceMapper.fromEntity(residence);
+        });
+    }
 
-        // Mapper directement le DTO vers l'entité pour la mise à jour
-        residence = residenceMapper.toEntity(residenceDTO); // Remplace l'ancienne résidence par la nouvelle
+    @Override
+    public ResidenceDTO update(ResidenceDTO residenceDTO) {
+        log.debug("Request to update residence: {}", residenceDTO);
+        return getResidenceById(residenceDTO.getId()).map(residence -> {
+            residence.setDescription(residenceDTO.getDescription());
+            residence.setPrice(residenceDTO.getPrice());
+            return save(residenceDTO);
+        }).orElseThrow(()-> new IllegalArgumentException());
+    }
 
-        // Mettre à jour l'adresse (si nécessaire)
-        if (residenceDTO.getAddress() != null) {
-            Address address = new Address();
-            address.setCity(residenceDTO.getAddress().getCity());
-            residence.setAddress(address);
+    @Override
+    public ResidenceDTO updateResidence(ResidenceDTO residenceDTO, Long id) {
+        log.debug("Request to update residence by id: {}", id);
+        residenceDTO.setId(id);
+        return update(residenceDTO);
+    }
+    @Override
+    public ResidenceDTO saveResidence(ResidenceDTO residenceDTO) {
+        log.debug("Request to save residence : {}", residenceDTO);
+        Optional<OwnerDTO> ownerDTO = ownerService.getById(residenceDTO.getOwner().getIdPerson());
+        if (ownerDTO.isPresent()) {
+            residenceDTO.setOwner(ownerDTO.get());
         }
-
-        // Mettre à jour les images si de nouveaux fichiers sont fournis
-        if (residenceDTO.getImageFiles() != null) {
-            List<Image> uploadedImages = new ArrayList<>();
-            for (MultipartFile file : residenceDTO.getImageFiles()) {
-                String imageUrl = fileStorageService.upload(file); // Upload l'image
-                Image image = new Image();
-                image.setImageUrl(imageUrl); // Stockons l'URL
-                uploadedImages.add(image); // Ajoutons à la liste
-            }
-            residence.setImages(uploadedImages); // Remplacer les images existantes
-        }
-
-        // Sauvegarder la résidence mise à jour dans la base de données
-        Residence updatedResidence = residenceRepository.save(residence);
-        return residenceMapper.fromEntity(updatedResidence); // Renvoyer la résidence mise à jour
+        final String slug = SlugifyUtils.generate(residenceDTO.getDescription());
+        residenceDTO.setSlug(slug);
+        return save(residenceDTO);
     }
-
-    public ResidenceDTO getResidenceBySlug(String slug) {
-        Residence residence = residenceRepository.findBySlug(slug)
-                .orElseThrow(() -> new RuntimeException("Residence not found for slug: " + slug));
-        return residenceMapper.fromEntity(residence);
-    }
-
 
 
     public void deleteResidence(Long id) {
-        Residence residence = residenceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Residence not found"));
-        residenceRepository.delete(residence);
+        log.debug("Request to delete residence by id: {}", id);
+        residenceRepository.deleteById(id);
     }
 }
 

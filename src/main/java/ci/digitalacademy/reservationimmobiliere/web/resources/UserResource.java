@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 @Slf4j
 @RequiredArgsConstructor
 public class UserResource {
@@ -27,12 +27,7 @@ public class UserResource {
     @GetMapping("/{id}")
     public ResponseEntity<?> findOne(@PathVariable Long id) {
         log.debug("Rest request to find user with id {}", id);
-        Optional<UserDTO> user = userService.getById(id);
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

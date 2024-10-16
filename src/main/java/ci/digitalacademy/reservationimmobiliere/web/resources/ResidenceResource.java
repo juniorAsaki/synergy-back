@@ -2,8 +2,13 @@ package ci.digitalacademy.reservationimmobiliere.web.resources;
 
 
 
+import ci.digitalacademy.reservationimmobiliere.services.ResidenceService;
 import ci.digitalacademy.reservationimmobiliere.services.dto.ResidenceDTO;
-import ci.digitalacademy.reservationimmobiliere.services.impl.ResidenceServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,51 +19,54 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/residences")
+@RequestMapping("/api/v1/owner/residences")
 @AllArgsConstructor
 @Slf4j
 public class ResidenceResource {
 
-    private final ResidenceServiceImpl residenceService;
+    private final ResidenceService residenceService;
 
-    // Créer une nouvelle résidence
     @PostMapping
-    public ResponseEntity<ResidenceDTO> createResidence(@RequestBody ResidenceDTO residenceDTO) throws IOException {
+    @ApiResponse(responseCode = "201", description= "Request to save residence")
+    public ResponseEntity<ResidenceDTO> save(@RequestBody ResidenceDTO residenceDTO) {
         log.debug("request to create residence {}", residenceDTO);
-        ResidenceDTO createdResidence = residenceService.createResidence(residenceDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdResidence);
+        return new ResponseEntity<>(residenceService.saveResidence(residenceDTO), HttpStatus.CREATED);
     }
-
-    // Obtenir toutes les résidences
     @GetMapping
-    public ResponseEntity<List<ResidenceDTO>> getAllResidences() {
+    @Operation(summary = "get all residence", description = "this endpoint allow to get all residence")
+    public List<ResidenceDTO> getAllResidences() {
         log.debug("request to get all residences");
-        List<ResidenceDTO> residences = residenceService.getAllResidences();
-        return ResponseEntity.ok(residences);
+        return residenceService.getAllResidences();
     }
-
-    // Obtenir une résidence par ID
     @GetMapping("/{id}")
-    public ResponseEntity<ResidenceDTO> getResidenceById(@PathVariable Long id) {
+    @Operation(summary = "get residence by id", description = "this endpoint allow to get residence by id")
+    public ResponseEntity<?> getResidenceById(@PathVariable Long id) {
         log.debug("request to get residence {}", id);
-        ResidenceDTO residence = residenceService.getResidenceById(id);
-        return ResponseEntity.ok(residence);
+        return new ResponseEntity<>(residenceService.getResidenceById(id), HttpStatus.OK);
     }
-
-    // Mettre à jour une résidence
     @PutMapping("/{id}")
-    public ResponseEntity<ResidenceDTO> updateResidence(@PathVariable Long id, @RequestBody ResidenceDTO residenceDTO) throws IOException {
-        log.debug("request to update residence {}", id);
-        ResidenceDTO updatedResidence = residenceService.updateResidence(id, residenceDTO);
-        return ResponseEntity.ok(updatedResidence);
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Request to get residence"),
+            @ApiResponse(responseCode = "404", description = "Residence not found", content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @Operation(summary = "update residence", description = "this endpoint allow to update residence")
+    public ResidenceDTO updateTeacher( @RequestBody ResidenceDTO residenceDTO, @PathVariable Long id) throws IOException {
+        log.debug(" REST Request to update  {}", residenceDTO);
+        return residenceService.updateResidence(residenceDTO, id);
     }
-
-    // Supprimer une résidence
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteResidence(@PathVariable Long id) {
+        @DeleteMapping("/{id}")
+    @Operation(summary = "delete residence", description = "this endpoint allow to delete residence")
+    public void deleteResidence(@PathVariable Long id) {
         log.debug("request to delete residence {}", id);
         residenceService.deleteResidence(id);
-        return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/slug/{slug}")
+    @Operation(summary = "get residence by slug", description = "this endpoint allow to get residence by slug")
+    public ResponseEntity<?> getResidenceById(@PathVariable String slug) {
+        log.debug("request to get residence by slug {}", slug);
+        return new ResponseEntity<>(residenceService.getResidenceBySlug(slug), HttpStatus.OK);
+    }
+
 }
 

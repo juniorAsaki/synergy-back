@@ -22,7 +22,7 @@ public class Address implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String city;
+    private String district;
+    private String slug;
 
-    @OneToOne
-    private Residence residences;
 }

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation de réservation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 15px;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .reservation-details {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .reservation-details p {
+            margin: 0.5rem 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        .button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .confirm {
+            background-color: #4CAF50;
+        }
+        .cancel {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Confirmation de réservation</h2>
+
+    <p>Bonjour M./Mme/Mlle <span th:text="${clientName}"></span>,</p>
+
+    <div class="reservation-details">
+        <p><strong>Numéro de réservation :</strong> <span th:text="${reservationSlug}"></span></p>
+        <p><strong>Date de début :</strong> <span th:text="${checkInDate}"></span></p>
+        <p><strong>Date de fin :</strong> <span th:text="${checkOutDate}"></span></p>
+        <p><strong>Résidence :</strong> <span th:text="${residenceName}"></span></p>
+        <p><strong>Prix total :</strong> <span th:text="${totalPrice}"></span></p>
+    </div>
+
+    <p>Veuillez confirmer ou annuler votre réservation en cliquant sur l'un des boutons ci-dessous :</p>
+
+    <div class="buttons">
+        <a th:href="@{${confirmationUrl}(action='confirm', reservationId=${reservationSlug})}" class="button confirm">Confirmer la réservation</a>
+        <a th:href="@{${confirmationUrl}(action='cancel', reservationId=${reservationSlug})}" class="button cancel">Annuler la réservation</a>
+    </div>
+
+    <p>Cordialement,<br>L'équipe de SYNERGY DEVS</p>
+</div>
+</body>
+</html>

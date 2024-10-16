@@ -15,7 +15,9 @@ public class UserDTO {
     private Long id;
     private String email;
     private String password;
+    private boolean rememberMe;
 
 
     private RoleDTO role;
+
 }

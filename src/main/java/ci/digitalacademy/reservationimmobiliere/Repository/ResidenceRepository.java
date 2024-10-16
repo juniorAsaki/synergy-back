@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface ResidenceRepository extends JpaRepository<Residence, Long> {
 
-    Optional<Residence> findBySlug(String slug); // Méthode pour trouver une résidence par son slug
+    Optional<Residence> findBySlug(String slug);
 
 }

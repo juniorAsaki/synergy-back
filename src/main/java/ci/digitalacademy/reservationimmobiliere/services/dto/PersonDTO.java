@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -13,12 +16,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PersonDTO {
 
-    private Long id;
+    private Long idPerson;
     private String firstName;
     private String lastName;
-    private String email;
     private String phoneNumber;
-    private String birthDay;
+    private String email;
     private String gender;
     private String slug;
 

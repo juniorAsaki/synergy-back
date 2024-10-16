@@ -10,7 +10,9 @@ public interface AddressService {
 
     Optional<AddressDTO> findById(Long id);
 
-    Optional<AddressDTO> findBySlug(String Slug);
+    Optional<AddressDTO> findBySlug(String slug);
+
+    AddressDTO saveAddress(AddressDTO addressDTO);
 
     void delete (Long id);
 

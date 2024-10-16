@@ -14,7 +14,7 @@ public class AddressDTO {
 
     private String city;
 
-
+    private String district;
 
     private String Slug;
 }

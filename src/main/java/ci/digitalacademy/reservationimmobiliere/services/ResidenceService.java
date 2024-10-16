@@ -1,7 +1,5 @@
 package ci.digitalacademy.reservationimmobiliere.services;
 
-import ci.digitalacademy.reservationimmobiliere.services.dto.CustomerDTO;
-import ci.digitalacademy.reservationimmobiliere.services.dto.ImageDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.ResidenceDTO;
 
 import java.io.IOException;
@@ -10,12 +8,14 @@ import java.util.Optional;
 
 public interface ResidenceService {
 
-    Optional<ResidenceDTO> getById(Long id);
 
-    ResidenceDTO createResidence(ResidenceDTO residenceDTO) throws IOException;
+    ResidenceDTO save(ResidenceDTO residenceDTO) ;
     List<ResidenceDTO> getAllResidences();
-    ResidenceDTO getResidenceById(Long id);
-    ResidenceDTO updateResidence(Long id, ResidenceDTO residenceDTO) throws IOException;
+    Optional <ResidenceDTO> getResidenceById(Long id);
+    ResidenceDTO updateResidence(ResidenceDTO residenceDTO, Long id ) throws IOException;
     void deleteResidence(Long id);
-    ResidenceDTO getResidenceBySlug(String slug);
+    Optional <ResidenceDTO> getResidenceBySlug(String slug);
+    ResidenceDTO update(ResidenceDTO residenceDTO);
+
+    ResidenceDTO saveResidence(ResidenceDTO residenceDTO);
 }

@@ -1,14 +1,11 @@
 package ci.digitalacademy.reservationimmobiliere.services;
 
 import ci.digitalacademy.reservationimmobiliere.services.dto.OwnerDTO;
-import ci.digitalacademy.reservationimmobiliere.services.dto.RegistrationUserAndOwnerDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface OwnerService {
-
-    RegistrationUserAndOwnerDTO saveOwnerAndUser(RegistrationUserAndOwnerDTO registrationUserAndOwnerDTO);
 
     OwnerDTO save(OwnerDTO ownerDTO);
     Optional<OwnerDTO> getById(Long id);
@@ -21,6 +18,9 @@ public interface OwnerService {
 
     OwnerDTO update(OwnerDTO ownerDTO, Long id);
 
+    OwnerDTO saveOwner(OwnerDTO ownerDTO);
+
     void delete(Long id);
 
+    Optional<OwnerDTO> findByUserId(Long id);
 }

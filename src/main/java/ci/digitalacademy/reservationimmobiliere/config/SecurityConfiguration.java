@@ -1,5 +1,6 @@
 package ci.digitalacademy.reservationimmobiliere.config;
 
+import ci.digitalacademy.reservationimmobiliere.security.AuthorityConstants;
 import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +19,17 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(CsrfConfigurer::disable) // Désactiver la protection CRSF pour cette configuration
+                .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+                        .requestMatchers("/api/v1/owners/**").hasAuthority(AuthorityConstants.ROLE_OWNER)
+                        .requestMatchers("/api/v1/customers/**").hasAuthority(AuthorityConstants.ROLE_CUSTOMER)
+                        .requestMatchers("/api/v1/reviews").hasAnyAuthority(AuthorityConstants.ROLE_OWNER, AuthorityConstants.ROLE_CUSTOMER)
+                        .requestMatchers("/api/v1/other/**").permitAll()
                         .requestMatchers("/api/authenticate").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/api/v1/public/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 // Crée une session d'état pour les utilisateurs se connectant via le formulaire

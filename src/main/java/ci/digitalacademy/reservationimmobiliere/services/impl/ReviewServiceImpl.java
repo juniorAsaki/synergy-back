@@ -11,6 +11,7 @@ import ci.digitalacademy.reservationimmobiliere.services.dto.ReviewDTO;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.ReviewMapper;
 import ci.digitalacademy.reservationimmobiliere.utils.SlugifyUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
@@ -26,64 +28,74 @@ public class ReviewServiceImpl implements ReviewService {
     private final CustomerService customerService;
     private final ResidenceService residenceService;
 
-    // Créer un nouvel avis
     @Override
     public ReviewDTO createReview(ReviewDTO reviewDTO) {
-        Optional<CustomerDTO> byId = customerService.getById(reviewDTO.getCustomer().getId());
-        Optional<ResidenceDTO> byIdd = residenceService.getById(reviewDTO.getCustomer().getId());
-
-        if (byId.isPresent() && byIdd.isPresent()) {
-
-        reviewDTO.setCustomer(byId.get());
-        reviewDTO.setResidence(byIdd.get());
-        }
-
-        Review review = reviewMapper.toEntity(reviewDTO);  // Mapper le DTO vers l'entité
+        log.debug("Request to create a new review : {}", reviewDTO);
+        Review review = reviewMapper.toEntity(reviewDTO);
         review.setSlug(SlugifyUtils.generate(reviewDTO.getComment()));
-        Review savedReview = reviewRepository.save(review);  // Sauvegarder l'avis dans la base
-        return reviewMapper.fromEntity(savedReview);  // Retourner l'avis sauvegardé sous forme de DTO
+        Review savedReview = reviewRepository.save(review);
+        return reviewMapper.fromEntity(savedReview);
     }
 
 
-
-    // Récupérer tous les avis
     @Override
     public List<ReviewDTO> getAllReviews() {
-        List<Review> reviews = reviewRepository.findAll();  // Récupérer tous les avis
+        log.debug("Request to get all reviews");
+        List<Review> reviews = reviewRepository.findAll();
         return reviews.stream()
-                .map(reviewMapper::fromEntity)  // Mapper chaque avis en DTO
+                .map(reviewMapper::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    // Récupérer un avis par ID
+
     @Override
     public Optional<ReviewDTO> getReviewById(Long id) {
+        log.debug("Request to get Review by id {}", id);
         return reviewRepository.findById(id)
-                .map(reviewMapper::fromEntity);  // Mapper l'entité si elle existe
+                .map(reviewMapper::fromEntity);
     }
 
 
-    // Mettre à jour un avis
     @Override
     public ReviewDTO updateReview(Long id, ReviewDTO reviewDTO) {
+        log.debug("Request to update Review : {}", reviewDTO);
         Review existingReview = reviewRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Review not found"));
 
         existingReview.setComment(reviewDTO.getComment());
         existingReview.setDate(reviewDTO.getDate());
         existingReview.setSlug(reviewDTO.getSlug());
-        // Si d'autres champs doivent être mis à jour, ajouter ici
 
         Review updatedReview = reviewRepository.save(existingReview);
-        return reviewMapper.fromEntity(updatedReview);  // Retourner l'avis mis à jour
+        return reviewMapper.fromEntity(updatedReview);
     }
 
-    // Supprimer un avis
+    @Override
+    public ReviewDTO saveReview(ReviewDTO reviewDTO) {
+        log.debug("Request to save Review : {}", reviewDTO);
+        Optional<CustomerDTO> customerDTO = customerService.getById(reviewDTO.getCustomer().getIdPerson());
+        Optional<ResidenceDTO> residenceDTO = residenceService.getResidenceById(reviewDTO.getResidence().getId());
+        if (customerDTO.isPresent() && residenceDTO.isPresent()) {
+
+            reviewDTO.setCustomer(customerDTO.get());
+            reviewDTO.setResidence(residenceDTO.get());
+        }
+        final String slug = SlugifyUtils.generate(reviewDTO.getCustomer().getFirstName());
+        reviewDTO.setSlug(slug);
+        return saveReview(reviewDTO);
+
+    }
+
     @Override
     public void deleteReview(Long id) {
-        Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Review not found"));
-        reviewRepository.delete(review);  // Supprimer l'avis
+        log.debug("Request to delete Review : {}", id);
+        reviewRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<ReviewDTO> getReviewBySlug(String slug) {
+        log.debug("Request to get Review by slug {}", slug);
+        return reviewRepository.findBySlug(slug).map(reviewMapper::fromEntity);
     }
 }
 

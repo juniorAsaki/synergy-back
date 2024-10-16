@@ -2,9 +2,7 @@ package ci.digitalacademy.reservationimmobiliere.services.impl;
 
 import ci.digitalacademy.reservationimmobiliere.Repository.UserRepository;
 import ci.digitalacademy.reservationimmobiliere.models.User;
-import ci.digitalacademy.reservationimmobiliere.services.RoleService;
 import ci.digitalacademy.reservationimmobiliere.services.UserService;
-import ci.digitalacademy.reservationimmobiliere.services.dto.RoleDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.UserDTO;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,17 +20,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final RoleService roleService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Override
     public UserDTO save(UserDTO userDTO) {
         log.debug("Request to save user {}", userDTO);
-        Optional<RoleDTO> roleDTO = roleService.getById(userDTO.getRole().getId());
-        if (roleDTO.isPresent()) {
-            userDTO.setRole(roleDTO.get());
-        }
         String password = userDTO.getPassword();
         userDTO.setPassword(bCryptPasswordEncoder.encode(password));
         User user = userMapper.toEntity(userDTO);
@@ -62,4 +55,13 @@ public class UserServiceImpl implements UserService {
         log.debug("Request to delete User : {}", id);
         userRepository.deleteById(id);
     }
+
+    @Override
+    public UserDTO getByEmail(String email) {
+        log.debug("Request to get User by email : {}", email);
+        return userRepository.findByEmail(email).map(user -> {
+            return userMapper.fromEntity(user);
+        }).orElse(null);
+    }
+
 }

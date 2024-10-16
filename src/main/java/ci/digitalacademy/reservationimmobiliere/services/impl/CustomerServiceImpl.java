@@ -10,6 +10,7 @@ import ci.digitalacademy.reservationimmobiliere.services.mapper.CustomerMapper;
 import ci.digitalacademy.reservationimmobiliere.utils.SlugifyUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
     public CustomerDTO save(CustomerDTO customerDTO) {
         log.debug("Request to save Customer {}", customerDTO);
@@ -63,8 +65,23 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
         log.debug("Request to save Customer {}", customerDTO);
+        RoleDTO role1 = new RoleDTO();
+        role1.setRole(AuthorityConstants.ROLE_CUSTOMER);
+        String password = customerDTO.getUser().getPassword();
+        if (customerDTO.getUser() != null) {
+            customerDTO.getUser().setRole(role1);
+            customerDTO.getUser().setPassword(bCryptPasswordEncoder.encode(password));
+        }
         final String slug = SlugifyUtils.generate(customerDTO.getFirstName());
         customerDTO.setSlug(slug);
         return save(customerDTO);
+    }
+
+    @Override
+    public Optional<CustomerDTO> findByUserId(Long id) {
+        log.debug("Request to get Customer by user id {}", id);
+        return customerRepository.findByUserId(id).map(customer -> {
+            return customerMapper.fromEntity(customer);
+        });
     }
 }

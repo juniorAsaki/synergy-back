@@ -7,9 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 
 @Getter
@@ -22,7 +24,7 @@ import java.io.Serializable;
 public abstract class Person implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long idPerson;
 
     @Column(nullable = false)
     private String firstName;
@@ -33,8 +35,12 @@ public abstract class Person implements Serializable {
     @Column(nullable = false, unique = true)
     private String phoneNumber;
 
+    @Column(nullable = false)
+    private String email;
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
 
     private String slug;
 

@@ -17,6 +17,10 @@ public interface ReviewService {
 
     ReviewDTO updateReview(Long id, ReviewDTO reviewDTO);
 
+    ReviewDTO saveReview(ReviewDTO reviewDTO);
+
     void deleteReview(Long id);
+
+    Optional<ReviewDTO> getReviewBySlug(String slug);
 }
 

@@ -18,4 +18,6 @@ public interface CustomerService {
     void delete(Long id);
 
     CustomerDTO saveCustomer(CustomerDTO customerDTO);
+
+    Optional<CustomerDTO> findByUserId(Long id);
 }
