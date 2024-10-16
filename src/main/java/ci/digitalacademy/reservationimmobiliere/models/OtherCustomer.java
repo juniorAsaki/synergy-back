@@ -1,5 +1,6 @@
 package ci.digitalacademy.reservationimmobiliere.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,4 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 public class OtherCustomer extends Person {
+
+    @Column(nullable = false)
+    private String email;
 }

@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class Other_customerServiceServiceImpl implements OtherCustomerService {
+public class OtherCustomerServiceServiceImpl implements OtherCustomerService {
 
     private final OtherCustomerRepository otherCustomerRepository;
     private final OtherCustomerMapper otherCustomerMapper;

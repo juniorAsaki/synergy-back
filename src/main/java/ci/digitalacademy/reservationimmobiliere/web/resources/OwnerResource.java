@@ -124,28 +124,28 @@ public class OwnerResource {
         imageService.saveAllPictureResidence(pictures, id);
     }
 
-    @DeleteMapping("/residences/{id}")
+    @DeleteMapping("/images/{id}")
     @Operation(summary = "delete image", description = "this endpoint allow to delete image")
     public void deleteImage(@PathVariable Long id) {
         log.debug("request to delete image {}", id);
         imageService.deleteImage(id);
     }
 
-    @GetMapping("/residences/{id}")
+    @GetMapping("/images/{id}")
     @Operation(summary = "get image by id", description = "this endpoint allow to get image by id")
     public ResponseEntity<?> getImageById(@PathVariable Long id) {
         log.debug("request to find image by id {}", id);
         return new ResponseEntity<>(imageService.getImageById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/residences")
+    @GetMapping("/images")
     @Operation(summary = "get all image", description = "this endpoint allow to get all image")
     public List<PictureResidenceDTO> getAllImage() {
         log.debug("request to get all image");
         return imageService.getAllImages();
     }
 
-    @GetMapping("/residences/slug/{slug}")
+    @GetMapping("/images/slug/{slug}")
     @Operation(summary = "get image by slug", description = "this endpoint allow to get image by slug")
     public ResponseEntity<?> getImageBySlug(@PathVariable String slug) {
         log.debug("request to find image by slug {}", slug);

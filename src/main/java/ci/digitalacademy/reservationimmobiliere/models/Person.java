@@ -35,9 +35,6 @@ public abstract class Person implements Serializable {
     @Column(nullable = false, unique = true)
     private String phoneNumber;
 
-    @Column(nullable = false)
-    private String email;
-
     @Enumerated(EnumType.STRING)
     private Gender gender;
 

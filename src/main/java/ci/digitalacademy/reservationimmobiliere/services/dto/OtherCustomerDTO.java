@@ -6,4 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OtherCustomerDTO extends PersonDTO{
+
+    private String email;
 }
