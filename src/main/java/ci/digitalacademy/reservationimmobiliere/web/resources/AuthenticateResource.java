@@ -58,6 +58,8 @@ public class AuthenticateResource {
         String jwt = createToken(authentication, login.isRememberMe(),byUserName);
         return new JWTTokenDTO(jwt);
     }
+
+
     public String createToken(Authentication authentication, boolean rememberMe, UserDTO userDTO) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

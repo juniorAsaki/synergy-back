@@ -17,7 +17,6 @@ public class UserDTO {
     private String password;
     private boolean rememberMe;
 
-
     private RoleDTO role;
 
 }
