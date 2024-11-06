@@ -38,7 +38,6 @@ public abstract class Person implements Serializable {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-
     private String slug;
 
 }
