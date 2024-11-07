@@ -27,6 +27,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/v1/reviews").hasAnyAuthority(AuthorityConstants.ROLE_OWNER, AuthorityConstants.ROLE_CUSTOMER)
                         .requestMatchers("/api/v1/other/**").permitAll()
                         .requestMatchers("/api/v1/authenticate").permitAll()
+                        .requestMatchers("/api/v1/users/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/v1/public/**").permitAll()

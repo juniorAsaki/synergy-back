@@ -4,8 +4,10 @@ import ci.digitalacademy.reservationimmobiliere.Repository.CustomerRepository;
 import ci.digitalacademy.reservationimmobiliere.models.Customer;
 import ci.digitalacademy.reservationimmobiliere.security.AuthorityConstants;
 import ci.digitalacademy.reservationimmobiliere.services.CustomerService;
+import ci.digitalacademy.reservationimmobiliere.services.UserService;
 import ci.digitalacademy.reservationimmobiliere.services.dto.CustomerDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.RoleDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.UserDTO;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.CustomerMapper;
 import ci.digitalacademy.reservationimmobiliere.utils.SlugifyUtils;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserService userService;
     @Override
     public CustomerDTO save(CustomerDTO customerDTO) {
         log.debug("Request to save Customer {}", customerDTO);
@@ -67,10 +72,10 @@ public class CustomerServiceImpl implements CustomerService {
         log.debug("Request to save Customer {}", customerDTO);
         RoleDTO role1 = new RoleDTO();
         role1.setRole(AuthorityConstants.ROLE_CUSTOMER);
-        String password = customerDTO.getUser().getPassword();
         if (customerDTO.getUser() != null) {
             customerDTO.getUser().setRole(role1);
-            customerDTO.getUser().setPassword(bCryptPasswordEncoder.encode(password));
+            UserDTO savedUser = userService.registrationAndSendOTP(customerDTO.getUser());
+            customerDTO.setUser(savedUser);
         }
         final String slug = SlugifyUtils.generate(customerDTO.getFirstName());
         customerDTO.setSlug(slug);

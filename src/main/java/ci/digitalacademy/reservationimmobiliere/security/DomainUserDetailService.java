@@ -31,16 +31,21 @@ public class DomainUserDetailService implements UserDetailsService {
             throw new IllegalArgumentException("User not found");
         }
 
-        GrantedAuthority authority = new SimpleGrantedAuthority(user.get().getRole().getRole());
+        if (!user.get().isVerified() || !user.get().isActivated()) {
+            throw new IllegalArgumentException("User not verified or activated");
+        }
 
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.get().getRole().getRole());
         List<GrantedAuthority> authorities = Collections.singletonList(authority);
 
-
-        return user.map(userRecover -> org.springframework.security.core.userdetails.User.builder()
-                .username(userRecover.getEmail())
-                .password(userRecover.getPassword())
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.get().getEmail())
+                .password(user.get().getPassword())
                 .authorities(authorities)
-                //      .roles()
-                .build()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
+                .disabled(false)
+                .build();
     }
 }

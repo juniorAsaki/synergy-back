@@ -1,12 +1,15 @@
 package ci.digitalacademy.reservationimmobiliere.services.impl;
 
+
 import ci.digitalacademy.reservationimmobiliere.Repository.OwnerRepository;
 import ci.digitalacademy.reservationimmobiliere.models.Owner;
 import ci.digitalacademy.reservationimmobiliere.models.Role;
 import ci.digitalacademy.reservationimmobiliere.security.AuthorityConstants;
 import ci.digitalacademy.reservationimmobiliere.services.OwnerService;
+import ci.digitalacademy.reservationimmobiliere.services.UserService;
 import ci.digitalacademy.reservationimmobiliere.services.dto.OwnerDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.RoleDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.UserDTO;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.OwnerMapper;
 import ci.digitalacademy.reservationimmobiliere.utils.SlugifyUtils;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +27,7 @@ public class OwnerServiceImpl implements OwnerService {
 
     private final OwnerRepository ownerRepository;
     private final OwnerMapper ownerMapper;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserService userService;
 
 
     @Override
@@ -81,10 +84,11 @@ public class OwnerServiceImpl implements OwnerService {
         log.debug("Request to save Owner {}", ownerDTO);
         RoleDTO role = new RoleDTO();
         role.setRole(AuthorityConstants.ROLE_OWNER);
-        String password = ownerDTO.getUser().getPassword();
         if (ownerDTO.getUser() != null) {
             ownerDTO.getUser().setRole(role);
-            ownerDTO.getUser().setPassword(bCryptPasswordEncoder.encode(password));
+            UserDTO savedUser = userService.registrationAndSendOTP(ownerDTO.getUser());
+            ownerDTO.setUser(savedUser);
+
         }
         final String slug = SlugifyUtils.generate(ownerDTO.getLastName());
         ownerDTO.setSlug(slug);
@@ -108,3 +112,4 @@ public class OwnerServiceImpl implements OwnerService {
 
 
 }
+

@@ -6,23 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+@NoArgsConstructor
+public class OtpVerificationDTO {
 
-    private Long id;
     private String email;
-    private String password;
     private Integer otpCode;
-    private LocalDateTime otpExpirationDate;
-    private boolean verified;
-    private boolean isActivated;
-
-
-    private RoleDTO role;
-
 }

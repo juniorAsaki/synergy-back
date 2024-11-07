@@ -2,7 +2,9 @@ package ci.digitalacademy.reservationimmobiliere.services.impl;
 
 import ci.digitalacademy.reservationimmobiliere.Repository.UserRepository;
 import ci.digitalacademy.reservationimmobiliere.models.User;
+import ci.digitalacademy.reservationimmobiliere.services.EmailService;
 import ci.digitalacademy.reservationimmobiliere.services.UserService;
+import ci.digitalacademy.reservationimmobiliere.services.dto.OtpVerificationDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.UserDTO;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +17,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
+import java.util.Random;
 
 
 @RequiredArgsConstructor
@@ -26,12 +31,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final EmailService emailService;
 
     @Override
     public UserDTO save(UserDTO userDTO) {
         log.debug("Request to save user {}", userDTO);
-        String password = userDTO.getPassword();
-        userDTO.setPassword(bCryptPasswordEncoder.encode(password));
         User user = userMapper.toEntity(userDTO);
         user = userRepository.save(user);
         return userMapper.fromEntity(user);
@@ -93,6 +97,47 @@ public class UserServiceImpl implements UserService {
         }
         return user;
     }
+
+
+    public UserDTO registrationAndSendOTP(UserDTO userDTO) {
+        log.debug("Request to registration and send OTP for user {}", userDTO);
+        String password = userDTO.getPassword();
+        userDTO.setPassword(bCryptPasswordEncoder.encode(password));
+        int otp = generateOTP();
+        LocalDateTime expirationDate = LocalDateTime.now().plus(10, ChronoUnit.MINUTES);
+        userDTO.setOtpCode(otp);
+        userDTO.setOtpExpirationDate(expirationDate);
+        UserDTO user = save(userDTO);
+        emailService.sendOTPEmail(userDTO);
+        return user;
+
+
+
+    }
+    private int generateOTP() {
+        Random random = new Random();
+        return 100000 + random.nextInt(900000);
+    }
+
+    public UserDTO verifyAndActivateAccount(OtpVerificationDTO otpVerificationDTO) {
+        User user = userRepository.findByEmail(otpVerificationDTO.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
+        if (user.getOtpCode() != null
+                && user.getOtpCode().equals(otpVerificationDTO.getOtpCode())
+                && !isOtpExpired(user.getOtpExpirationDate())) {
+            user.setVerified(true);
+            user.setActivated(true);
+            User savedUser = userRepository.save(user);
+            return userMapper.fromEntity(savedUser);
+        } else {
+            throw new IllegalArgumentException("OTP non valide ou expiré.");
+        }
+    }
+
+    private boolean isOtpExpired(LocalDateTime expirationDate) {
+        return !expirationDate.isAfter(LocalDateTime.now());
+    }
+
 }
 
 

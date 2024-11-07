@@ -23,8 +23,8 @@ public class CustomerPublicResource {
 
     @PostMapping("/register")
     @ApiResponse(responseCode = "201", description= "Request to save customer")
-    private ResponseEntity<CustomerDTO> saveCustomer(@RequestBody CustomerDTO customerDTO){
+    private void saveCustomer(@RequestBody CustomerDTO customerDTO){
         log.debug("REST request to save customer: {}", customerDTO);
-        return new ResponseEntity<>(customerService.saveCustomer(customerDTO), HttpStatus.CREATED);
+        customerService.saveCustomer(customerDTO);
     }
 }

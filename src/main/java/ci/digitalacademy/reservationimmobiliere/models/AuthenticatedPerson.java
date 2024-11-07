@@ -15,7 +15,11 @@ import lombok.Setter;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class AuthenticatedPerson extends Person{
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne
     private User user;
+
+
+    @OneToOne
+    private Address address;
 
 }

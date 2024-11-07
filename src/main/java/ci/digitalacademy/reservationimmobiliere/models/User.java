@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,7 +22,10 @@ public class User implements Serializable {
     private Long id;
     private String email;
     private String password;
-    private boolean rememberMe;
+    private Integer otpCode;
+    private LocalDateTime otpExpirationDate;
+    private boolean verified;
+    private boolean isActivated;
 
     @ManyToOne
     private Role role;

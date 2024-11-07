@@ -47,7 +47,7 @@ public class AuthenticateResource {
     private final JwtEncoder jwtEncoder;
 
     @PostMapping("/authenticate")
-    public JWTTokenDTO authorize(@RequestBody UserDTO login) {
+    public JWTTokenDTO authorize(@RequestBody LoginDTO login) {
         UserDTO byUserName = userService.getByEmail(login.getEmail());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 login.getEmail(),
@@ -58,8 +58,6 @@ public class AuthenticateResource {
         String jwt = createToken(authentication, login.isRememberMe(),byUserName);
         return new JWTTokenDTO(jwt);
     }
-
-
     public String createToken(Authentication authentication, boolean rememberMe, UserDTO userDTO) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
