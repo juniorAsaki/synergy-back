@@ -14,4 +14,5 @@ public class OtpVerificationDTO {
 
     private String email;
     private Integer otpCode;
+
 }
