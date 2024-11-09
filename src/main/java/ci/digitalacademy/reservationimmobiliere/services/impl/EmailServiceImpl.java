@@ -23,13 +23,16 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
 
 
-    @Override
-    public void sendOTPEmail(UserDTO userDTO) {
+    public void sendActivationEmail(UserDTO userDTO) {
+        if (userDTO == null || userDTO.getEmail() == null) {
+            throw new IllegalArgumentException("UserDTO ou adresse e-mail invalide");
+        }
 
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            message.setFrom("angeseugban2000@gmail.com");
+            String fromAddress = "angeseugban2000@gmail.com";
+            message.setFrom(fromAddress);
             helper.setTo(userDTO.getEmail());
             helper.setSubject("Activation de votre compte");
 
@@ -38,14 +41,40 @@ public class EmailServiceImpl implements EmailService {
             context.setVariable("otp", userDTO.getOtpCode());
             context.setVariable("otpExpirationDate", userDTO.getOtpExpirationDate());
 
-            String body = templateEngine.process("otp-email", context);
+            String body = templateEngine.process("activateCompte", context);
             helper.setText(body, true);
 
             mailSender.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erreur lors de l'envoi de l'email d'activation", e);
+        }
+    }
+
+
+    public void sendPasswordResetEmail(UserDTO userDTO) {
+        if (userDTO == null || userDTO.getEmail() == null) {
+            throw new IllegalArgumentException("UserDTO ou adresse e-mail invalide");
         }
 
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            String fromAddress = "angeseugban2000@gmail.com";
+            message.setFrom(fromAddress);
+            helper.setTo(userDTO.getEmail());
+            helper.setSubject("Réinitialisation de votre mot de passe");
+
+            Context context = new Context();
+            context.setVariable("email", userDTO.getEmail());
+            context.setVariable("otp", userDTO.getOtpCode());
+            context.setVariable("otpExpirationDate", userDTO.getOtpExpirationDate());
+
+            String body = templateEngine.process("resetPassword", context);
+            helper.setText(body, true);
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de l'envoi de l'email de réinitialisation du mot de passe", e);
+        }
     }
 
     @Override

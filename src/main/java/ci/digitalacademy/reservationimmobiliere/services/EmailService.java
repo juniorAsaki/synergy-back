@@ -7,7 +7,9 @@ import ci.digitalacademy.reservationimmobiliere.services.dto.VisitorReservationD
 
 public interface EmailService {
 
-    void sendOTPEmail(UserDTO userDTO);
+    void sendPasswordResetEmail(UserDTO userDTO);
+
+    void sendActivationEmail(UserDTO userDTO);
 
     void sendEmail(OtherCustomerDTO otherCustomerDTO, VisitorReservationDTO visitorReservationDTO) ;
 }

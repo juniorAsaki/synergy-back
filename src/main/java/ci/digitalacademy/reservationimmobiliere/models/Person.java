@@ -22,17 +22,15 @@ import java.time.LocalDate;
 @Table(name = "person")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Person implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idPerson;
 
-    @Column(nullable = false)
     private String firstName;
 
-    @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)

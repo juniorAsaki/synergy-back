@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Activation de votre compte</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f5f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 30px;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    h1 {
+      color: #4a4a4a;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .otp-code {
+      font-size: 32px;
+      color: #6c5ce7;
+      background-color: #f3efff;
+      padding: 15px;
+      border-radius: 8px;
+      display: inline-block;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    p {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+    .footer {
+      margin-top: 30px;
+      color: #aaa;
+      font-size: 14px;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: #6c5ce7;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .button:hover {
+      background-color: #5b49c1;
+    }
+    .expiry {
+      color: #333;
+      font-size: 15px;
+      margin: 0 0 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Bienvenue <span th:text="${email}"></span> !</h1>
+  <p>Nous sommes ravis de vous accueillir. Utilisez le code d'activation ci-dessous pour finaliser votre inscription :</p>
+  <div class="otp-code" th:text="${otp}"></div>
+  <p class="expiry">Ce code est valable jusqu’au <span th:text="${#temporals.format(otpExpirationDate, 'dd/MM/yyyy HH:mm')}"></span>.</p>
+  <div class="footer">
+    <p>Merci pour votre confiance,</p>
+    <p>L'équipe Synergy</p>
+  </div>
+</div>
+</body>
+</html>
+

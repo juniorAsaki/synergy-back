@@ -18,7 +18,6 @@ public class AuthenticatedPerson extends Person{
     @OneToOne
     private User user;
 
-
     @OneToOne
     private Address address;
 
