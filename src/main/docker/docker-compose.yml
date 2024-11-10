@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: 'postgres:15.3'
+    restart: always
+    environment:
+      - POSTGRES_USER=synergy
+      - POSTGRES_PASSWORD=synergy00
+      - POSTGRES_DB=reservImmo_db
+      - PGPASSWORD=synergy00
+    ports:
+      - '5433:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - my-network
+    container_name: db
+
+  spring-app:
+    image: ndev378/app-synergyimmo-back:synergy-v1
+    ports:
+      - '8081:8080'
+    depends_on:
+      - db
+    networks:
+      - my-network
+    container_name: spring-app
+
+networks:
+  my-network:
+    driver: bridge
+
+volumes:
+  pgdata:

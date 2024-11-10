@@ -1,14 +1,14 @@
 name: revervImmo-api
 services:
   app:
-    image: revervimmo:0.0.1-SNAPSHOT
+    image: ndev378/app-synergyimmo-back:synergy-v1
     environment:
       SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5433/reservImmo_db"
       SPRING_DATASOURCE_USERNAME: synergy
       SPRING_DATASOURCE_PASSWORD: synergy00
 
     ports:
-      - 127.0.0.1:80:8081
+      - 127.0.0.1:8081:8080
     depends_on:
       - db
   db:

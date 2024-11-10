@@ -10,7 +10,7 @@
     </parent>
     <groupId>ci.digitalAcademy</groupId>
     <artifactId>reservationImmobiliere</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>synergy-v1</version>
     <name>reservationImmobiliere</name>
     <description>reservationImmobiliere</description>
     <url/>
@@ -168,7 +168,7 @@
                 <version>3.4.3</version>
                 <configuration>
                     <to>
-                        <image>ndev378/app-immobilier-back:${version}</image>
+                        <image>ndev378/app-synergyimmo-back:${version}</image>
                     </to>
                 </configuration>
             </plugin>
