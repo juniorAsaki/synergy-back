@@ -22,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/v1/owner/residences")
 @AllArgsConstructor
 @Slf4j
+@CrossOrigin("*")
 public class ResidenceResource {
 
     private final ResidenceService residenceService;

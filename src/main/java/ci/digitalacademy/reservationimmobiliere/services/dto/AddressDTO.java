@@ -10,7 +10,6 @@ import java.util.Set;
 @Setter
 public class AddressDTO {
 
-    private Long id;
 
     private String city;
 

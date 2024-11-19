@@ -80,7 +80,7 @@ public class ResidenceServiceImpl implements ResidenceService {
     @Override
     public ResidenceDTO saveResidence(ResidenceDTO residenceDTO) {
         log.debug("Request to save residence : {}", residenceDTO);
-        UserDTO user = userService.getCurrentUser();
+       UserDTO user = userService.getCurrentUser();
         Optional<OwnerDTO> ownerDTO = ownerService.getById(user.getId());
         if (ownerDTO.isPresent()) {
             residenceDTO.setOwner(ownerDTO.get());

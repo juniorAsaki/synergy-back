@@ -22,7 +22,6 @@ public class SecurityConfiguration {
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/api/v1/owners/**").hasAuthority(AuthorityConstants.ROLE_OWNER)
                         .requestMatchers("/api/v1/customers/**").hasAuthority(AuthorityConstants.ROLE_CUSTOMER)
                         .requestMatchers("/api/v1/reviews").hasAnyAuthority(AuthorityConstants.ROLE_OWNER, AuthorityConstants.ROLE_CUSTOMER)
                         .requestMatchers("/api/v1/other/**").permitAll()
@@ -31,6 +30,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/v1/public/**").permitAll()
+                        .requestMatchers("/api/v1/owner/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 // Crée une session d'état pour les utilisateurs se connectant via le formulaire
