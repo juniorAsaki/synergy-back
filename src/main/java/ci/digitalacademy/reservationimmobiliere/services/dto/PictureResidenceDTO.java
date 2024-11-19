@@ -1,5 +1,6 @@
 package ci.digitalacademy.reservationimmobiliere.services.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class PictureResidenceDTO {
 
     private Long id;
     private String imageUrl;
+    @JsonIgnore
     private ResidenceDTO residence;
     private String slug;
 }

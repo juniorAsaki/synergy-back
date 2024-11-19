@@ -23,10 +23,10 @@ public class PictureResidence {
 
     private final PictureResidenceServiceImpl imageService;
 
-    @PostMapping("/residence/{id}/all")
+    @PostMapping("/{id}")
     @ApiResponse(responseCode = "201", description= "Request to save image")
     public void addPicture(@RequestParam List<MultipartFile> pictures, @PathVariable Long id) {
-        log.debug("request to add image {}", pictures);
+        log.debug("request to add image {} : {}", pictures , id);
         imageService.saveAllPictureResidence(pictures, id);
     }
 
