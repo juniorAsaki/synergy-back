@@ -4,19 +4,16 @@ package ci.digitalacademy.reservationimmobiliere.services.impl;
 
 import ci.digitalacademy.reservationimmobiliere.Repository.ResidenceRepository;
 import ci.digitalacademy.reservationimmobiliere.models.Residence;
-import ci.digitalacademy.reservationimmobiliere.services.AddressService;
 import ci.digitalacademy.reservationimmobiliere.services.OwnerService;
 import ci.digitalacademy.reservationimmobiliere.services.ResidenceService;
 import ci.digitalacademy.reservationimmobiliere.services.UserService;
-import ci.digitalacademy.reservationimmobiliere.services.dto.OwnerDTO;
-import ci.digitalacademy.reservationimmobiliere.services.dto.ResidenceDTO;
-import ci.digitalacademy.reservationimmobiliere.services.dto.AddressDTO;
-import ci.digitalacademy.reservationimmobiliere.services.dto.UserDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.*;
 import ci.digitalacademy.reservationimmobiliere.services.mapper.ResidenceMapper;
 import ci.digitalacademy.reservationimmobiliere.utils.SlugifyUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -80,7 +77,7 @@ public class ResidenceServiceImpl implements ResidenceService {
     @Override
     public ResidenceDTO saveResidence(ResidenceDTO residenceDTO) {
         log.debug("Request to save residence : {}", residenceDTO);
-       UserDTO user = userService.getCurrentUser();
+        UserDTO user = userService.getCurrentUser();
         Optional<OwnerDTO> ownerDTO = ownerService.getById(user.getId());
         if (ownerDTO.isPresent()) {
             residenceDTO.setOwner(ownerDTO.get());
@@ -88,6 +85,15 @@ public class ResidenceServiceImpl implements ResidenceService {
         final String slug = SlugifyUtils.generate(residenceDTO.getDescription());
         residenceDTO.setSlug(slug);
         return save(residenceDTO);
+    }
+
+    @Override
+    public List<ResidenceDTO> searchResidences(SearchDTO search) {
+        log.debug("Request to search residences : {}", search);
+        List<Residence> residences = residenceRepository.findByPriceOrAddress_CityIgnoreCaseOrAddress_DistrictIgnoreCaseOrNameIgnoreCase(search.getPrice(), search.getCity(), search.getDistrict(), search.getName());
+        return residences.stream().map(residence -> {
+            return residenceMapper.fromEntity(residence);
+        }).toList();
     }
 
 

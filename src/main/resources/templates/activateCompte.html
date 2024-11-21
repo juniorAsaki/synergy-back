@@ -69,7 +69,7 @@
 </head>
 <body>
 <div class="container">
-  <h1>Bienvenue <span th:text="${email}"></span> !</h1>
+  <h1>Bienvenue !</h1>
   <p>Nous sommes ravis de vous accueillir. Utilisez le code d'activation ci-dessous pour finaliser votre inscription :</p>
   <div class="otp-code" th:text="${otp}"></div>
   <p class="expiry">Ce code est valable jusqu’au <span th:text="${#temporals.format(otpExpirationDate, 'dd/MM/yyyy HH:mm')}"></span>.</p>

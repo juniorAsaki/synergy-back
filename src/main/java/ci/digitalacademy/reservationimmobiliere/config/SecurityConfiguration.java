@@ -30,10 +30,9 @@ public class SecurityConfiguration {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/v1/public/**").permitAll()
-                        .requestMatchers("/api/v1/owner/**").permitAll()
+                        .requestMatchers("/api/v1/owners/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                // Crée une session d'état pour les utilisateurs se connectant via le formulaire
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);// Utilisé pour les APIs sécurisées via JWT
