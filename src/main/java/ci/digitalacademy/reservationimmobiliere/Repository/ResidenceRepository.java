@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface ResidenceRepository extends JpaRepository<Residence, Long> {
 
     Optional<Residence> findBySlug(String slug);
+    List<Residence> findAllByOwner_IdPerson(Long idPerson);
 
     List<Residence> findByPriceOrAddress_CityIgnoreCaseOrAddress_DistrictIgnoreCaseOrNameIgnoreCase( BigDecimal price, String city, String district, String name);
 

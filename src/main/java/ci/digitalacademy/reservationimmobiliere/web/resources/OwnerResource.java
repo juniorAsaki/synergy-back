@@ -80,13 +80,13 @@ public class OwnerResource {
         log.debug("request to create residence {}", residenceDTO);
         return new ResponseEntity<>(residenceService.saveResidence(residenceDTO), HttpStatus.CREATED);
     }
-    @GetMapping("/residences")
-    @Operation(summary = "get all residence", description = "this endpoint allow to get all residence")
-    public List<ResidenceDTO> getAllResidences() {
-        log.debug("request to get all residences");
-        return residenceService.getAllResidences();
-    }
     @GetMapping("/residences/{id}")
+    @Operation(summary = "get all residence", description = "this endpoint allow to get all residence")
+    public List<ResidenceDTO> getAllResidences(@PathVariable Long id) {
+        log.debug("request to get all residences");
+        return residenceService.findAllByOwner_Id(id);
+    }
+    @GetMapping("/residence/{id}")
     @Operation(summary = "get residence by id", description = "this endpoint allow to get residence by id")
     public ResponseEntity<?> getResidenceById(@PathVariable Long id) {
         log.debug("request to get residence {}", id);
@@ -117,7 +117,7 @@ public class OwnerResource {
     }
 
 
-    @PostMapping("/residences/{id}/all")
+    @PostMapping("/picture-residences/{id}")
     @ApiResponse(responseCode = "201", description= "Request to save image")
     public void addPicture(@RequestParam List<MultipartFile> pictures, @PathVariable Long id) {
         log.debug("request to add image {}", pictures);

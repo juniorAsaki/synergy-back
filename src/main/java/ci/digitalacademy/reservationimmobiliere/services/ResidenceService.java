@@ -1,5 +1,6 @@
 package ci.digitalacademy.reservationimmobiliere.services;
 
+import ci.digitalacademy.reservationimmobiliere.models.Residence;
 import ci.digitalacademy.reservationimmobiliere.services.dto.ResidenceDTO;
 import ci.digitalacademy.reservationimmobiliere.services.dto.SearchDTO;
 

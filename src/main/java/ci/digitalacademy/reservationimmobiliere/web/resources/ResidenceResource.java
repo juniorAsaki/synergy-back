@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/owner/residences")
+@RequestMapping("/api/v1/residences")
 @AllArgsConstructor
 @Slf4j
 public class ResidenceResource {

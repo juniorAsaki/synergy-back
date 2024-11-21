@@ -22,7 +22,6 @@ public class UserDTO {
     private boolean verified;
     private boolean isActivated;
 
-
     private RoleDTO role;
 
 }

@@ -24,6 +24,7 @@ public class SecurityConfiguration {
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                         .requestMatchers("/api/v1/customers/**").hasAuthority(AuthorityConstants.ROLE_CUSTOMER)
                         .requestMatchers("/api/v1/reviews").hasAnyAuthority(AuthorityConstants.ROLE_OWNER, AuthorityConstants.ROLE_CUSTOMER)
+                        .requestMatchers("/api/v1/owners/**").hasAnyAuthority(AuthorityConstants.ROLE_OWNER)
                         .requestMatchers("/api/v1/other/**").permitAll()
                         .requestMatchers("/api/v1/authenticate").permitAll()
                         .requestMatchers("/api/v1/users/**").permitAll()
@@ -31,6 +32,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/v1/public/**").permitAll()
                         .requestMatchers("/api/v1/owners/**").permitAll()
+                        .requestMatchers("/api/v1/residences/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
