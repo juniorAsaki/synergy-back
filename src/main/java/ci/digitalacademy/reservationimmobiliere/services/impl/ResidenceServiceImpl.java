@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -88,6 +89,12 @@ public class ResidenceServiceImpl implements ResidenceService {
         final String slug = SlugifyUtils.generate(residenceDTO.getDescription());
         residenceDTO.setSlug(slug);
         return save(residenceDTO);
+    }
+
+    @Override
+    public List<ResidenceDTO> findAllByOwner_Id(Long idPerson) {
+        log.debug("Request to get all residences");
+        return residenceRepository.findAllByOwner_IdPerson(idPerson).stream().map(residenceMapper::fromEntity).toList();
     }
 
 

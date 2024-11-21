@@ -79,11 +79,11 @@ public class PictureResidenceServiceImpl implements PictureResidenceService {
         ResidenceDTO residenceDTO = residenceService.getResidenceById(id).orElseThrow(()->new IllegalStateException("Residence not found"));
         pictures.forEach(picture -> {
             try {
-                final String url = fileStorageService.upload(picture);
+                String url = fileStorageService.upload(picture);
                 PictureResidenceDTO imageDTO = new PictureResidenceDTO();
                 imageDTO.setResidence(residenceDTO);
                 imageDTO.setImageUrl(url);
-                final String slug = SlugifyUtils.generate(residenceDTO.getName());
+                String slug = SlugifyUtils.generate(residenceDTO.getName());
                 imageDTO.setSlug(slug);
                 save(imageDTO);
             } catch (IOException e) {

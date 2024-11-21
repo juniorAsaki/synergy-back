@@ -1,6 +1,7 @@
 package ci.digitalacademy.reservationimmobiliere.web.resources;
 
 
+import ci.digitalacademy.reservationimmobiliere.models.User;
 import ci.digitalacademy.reservationimmobiliere.services.CustomerService;
 import ci.digitalacademy.reservationimmobiliere.services.OwnerService;
 import ci.digitalacademy.reservationimmobiliere.services.UserService;
@@ -58,6 +59,9 @@ public class AuthenticateResource {
         String jwt = createToken(authentication, login.isRememberMe(),byUserName);
         return new JWTTokenDTO(jwt);
     }
+
+
+
     public String createToken(Authentication authentication, boolean rememberMe, UserDTO userDTO) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -80,6 +84,19 @@ public class AuthenticateResource {
                     .subject(authentication.getName())
                     .claim(SecurityUtils.AUTHORITHIES_KEY, authorities)
                     .claim("id",ownerDTO.getIdPerson())
+                    .build();
+            JwsHeader jwsHeader = JwsHeader.with(SecurityUtils.JWT_ALGORITHM).build();
+            return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+        }
+        else if (authorities.contains("ADMIN")){
+            Optional<UserDTO> byUserId = userService.getById(userDTO.getId());
+            UserDTO userDTO1 = byUserId.get();
+            JwtClaimsSet claims = JwtClaimsSet.builder()
+                    .issuedAt(now)
+                    .expiresAt(validity)
+                    .subject(authentication.getName())
+                    .claim(SecurityUtils.AUTHORITHIES_KEY, authorities)
+                    .claim("id",userDTO1.getId())
                     .build();
             JwsHeader jwsHeader = JwsHeader.with(SecurityUtils.JWT_ALGORITHM).build();
             return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
