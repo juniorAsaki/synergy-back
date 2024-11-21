@@ -2,8 +2,10 @@ package ci.digitalacademy.reservationimmobiliere.services;
 
 import ci.digitalacademy.reservationimmobiliere.models.Residence;
 import ci.digitalacademy.reservationimmobiliere.services.dto.ResidenceDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.SearchDTO;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,5 +22,5 @@ public interface ResidenceService {
 
     ResidenceDTO saveResidence(ResidenceDTO residenceDTO);
 
-    List<ResidenceDTO> findAllByOwner_Id(Long idPerson);
+    List<ResidenceDTO> searchResidences(SearchDTO search);
 }

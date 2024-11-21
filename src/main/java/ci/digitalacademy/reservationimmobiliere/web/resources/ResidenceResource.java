@@ -4,6 +4,7 @@ package ci.digitalacademy.reservationimmobiliere.web.resources;
 
 import ci.digitalacademy.reservationimmobiliere.services.ResidenceService;
 import ci.digitalacademy.reservationimmobiliere.services.dto.ResidenceDTO;
+import ci.digitalacademy.reservationimmobiliere.services.dto.SearchDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,12 +18,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/residences")
 @AllArgsConstructor
 @Slf4j
-@CrossOrigin("*")
 public class ResidenceResource {
 
     private final ResidenceService residenceService;
@@ -69,5 +70,14 @@ public class ResidenceResource {
         return new ResponseEntity<>(residenceService.getResidenceBySlug(slug), HttpStatus.OK);
     }
 
+    @PostMapping("/search")
+    @Operation(summary = "Search for residences",
+            description = "Allows searching for residences by price, city, district, or name")
+    public ResponseEntity<List<ResidenceDTO>> searchResidences(
+            @RequestBody SearchDTO search
+    ) {
+        log.debug("REST request to search residences with criteria: {}", search);
+        return ResponseEntity.ok(residenceService.searchResidences(search));
+    }
 }
 

@@ -35,7 +35,6 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/v1/residences/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                // Crée une session d'état pour les utilisateurs se connectant via le formulaire
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);// Utilisé pour les APIs sécurisées via JWT
