@@ -23,4 +23,6 @@ public interface ResidenceService {
     ResidenceDTO saveResidence(ResidenceDTO residenceDTO);
 
     List<ResidenceDTO> searchResidences(SearchDTO search);
+
+    List<ResidenceDTO> findAllByOwner_IdPerson(Long idPerson);
 }

@@ -84,7 +84,7 @@ public class OwnerResource {
     @Operation(summary = "get all residence", description = "this endpoint allow to get all residence")
     public List<ResidenceDTO> getAllResidences(@PathVariable Long id) {
         log.debug("request to get all residences");
-        return residenceService.findAllByOwner_Id(id);
+        return residenceService.findAllByOwner_IdPerson(id);
     }
     @GetMapping("/residence/{id}")
     @Operation(summary = "get residence by id", description = "this endpoint allow to get residence by id")

@@ -97,6 +97,11 @@ public class ResidenceServiceImpl implements ResidenceService {
         }).toList();
     }
 
+    @Override
+    public List<ResidenceDTO> findAllByOwner_IdPerson(Long idPerson) {
+        return this.residenceRepository.findAllByOwner_IdPerson(idPerson).stream().map(residenceMapper::fromEntity).collect(Collectors.toList());
+    }
+
 
     public void deleteResidence(Long id) {
         log.debug("Request to delete residence by id: {}", id);
