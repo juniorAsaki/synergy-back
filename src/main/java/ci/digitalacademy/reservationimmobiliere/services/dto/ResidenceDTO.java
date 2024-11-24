@@ -20,6 +20,8 @@ public class ResidenceDTO {
     private Integer diningRoom;
     private Integer terrace;
     private Integer lounges;
+    private String longitude;
+    private String latitude;
     private boolean wifi;
     private boolean parking;
     private boolean catering;

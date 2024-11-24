@@ -35,6 +35,8 @@ public class Residence implements Serializable {
     private boolean catering;
     private boolean cleaning;
     private boolean available;
+    private String longitude;
+    private String latitude;
 
     @Column(unique = true)
     private String slug;
